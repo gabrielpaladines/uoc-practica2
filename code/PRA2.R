@@ -20,6 +20,7 @@ kable(data.frame(variables=names(res),clase=as.vector(res)))
 # Eliminar columnas
 d_suicides <- select(data, -HDI.for.year, -country.year)
 str(d_suicides)
+
 # 3 LIMIPIEZA DE DATOS
 
 # 3.1 Los datos que contienen ceros o elementos vacíos
@@ -28,7 +29,8 @@ colSums(d_suicides=="")
 colSums(d_suicides=="0")
 
 # 3.2 Identificación y tratamiento de valores extremos
-# An?lisis mediante diagramas de cajas e histogramas
+
+# Análisis mediante diagramas de cajas e histogramas
 par(mfrow=c(2,2))
 for(i in 1:ncol(d_suicides)) {
   if (is.integer(d_suicides[,i])){
@@ -52,9 +54,10 @@ for (i in cols){
 
 # 4.1 Seleccion de los grupos de datos que se quieren analizar
 
+
 # 4.2 Comprobacion de la normalidad y homogeneidad de la varianza
 par(mfrow=c(2,2))
-cols <- c("suicides_no", "population", "suicides.100k.pop")
+cols <- c("suicides_no", "population", "suicides.100k.pop", "gdp_per_capita....")
 for (i in cols){
   qqnorm(d_suicides[,i],main = paste("Normal Q-Q Plot for ", i))
   qqline(d_suicides[,i],col="red")
