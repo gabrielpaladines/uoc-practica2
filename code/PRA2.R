@@ -2,6 +2,7 @@
 # https://www.kaggle.com/rushirdx/suicide-rates-from-1986-to-2016/data
 library(dplyr)
 library(knitr)
+library(ggplot2)
 
 # 1 DESCRIPCION DEL DATASET
 
@@ -108,4 +109,24 @@ for (i in cols){
 # Análisis de homogeneidad de la varianza
 
 # 4.3 Aplicando pruebas estadisticas para comparar grupos
+
+
+# ¿Es mayor la tasa de suicidios en hombres que en mujeres (en función del porcentaje de población)?
+#  - Atributos: sex, suicides_no, population
+#  - Calcular la tasa de suicidios por sex.
+#  - Gráfica o tabla donde se muestra una comparativa entre la tasa de suicidios entre hombres y mujeres.
+df  <- d_suicides %>% select(sex, suicides_no, population)
+df[2:3] <- lapply(df[2:3], as.numeric)
+report <- df %>%
+  group_by(sex) %>%
+  summarise_all(funs(sum)) %>%
+  mutate(suicides_100k_pop = suicides_no / population * 100000)
+
+theme_set(theme_classic())
+g <- ggplot(report, aes(sex,suicides_100k_pop))
+g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
+  labs(title="Bar Chart", 
+       subtitle="Tasa de suicidios por genero") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
 
