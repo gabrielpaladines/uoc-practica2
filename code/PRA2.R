@@ -202,6 +202,46 @@ g_case3
 # 6 RESOLUCIÓN DEL PROBLEMA
 # A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿los resultados permiten responder al problema?
 
+# CASO 1: Tasa de suicidios en hombres y en mujeres
+
+# La conclusión aquí es simple: el suicidio afecta sensiblemente más a los hombres, 
+# ya que la tasa es más del triple que en las mujeres.
+
+# CASO 2: Tasa de suicidios por generaciones y nivel de riqueza
+
+# La primera conclusión obvia es que para todas las generaciones salvo una 
+# la mayor tasa de suicidios se da entre los países del segundo mundo. 
+# El análisis que se puede hacer de esto es que en los países más ricos la crisis no ha golpeado tan fuerte
+# o ha habido más medios para resistir, mientras que en los países más pobres, 
+# cuyo nivel de vida previo ya era bajo, la crisis económica posiblemente no supone un gran cambio.
+
+# Por otra parte, donde existe una mayor desigualdad es en la generación Silent 
+# (nacidos entre finales de los años 20 y mediados de los 40), 
+# en la cual destaca claramente el segundo mundo, además de ser la generación más impactada respecto a las demás. 
+# En cuanto a lo segundo, se puede concluir que al ser una generación mayor, tiene menor población 
+# y por lo tanto la tasa aumenta con facilidad.
+
+# Más conclusiones: En la generación Z (nacidos de mediados de los 90 a mediados de los 2000) 
+# es en la que claramente se observan menores tasas. Hay que considerar que durante más de la mitad del periodo estudiado 
+# no han podido nacer personas de esa generación o bien han sido muy pequeñas como para cometer suicidio, 
+# por lo cual es lógico el resultado. Además, es destacable que es el único grupo de población 
+# en el que el tercer mundo tiene una tasa más alta. Esto da que pensar que posiblemente los niños del tercer mundo 
+# afrontan dificultades que les llevan a cometer suicidios antes que en países más avanzados.
+
+# Finalmente se puede observar que las tasas de suicidio han ido disminuyendo por generaciones 
+# (en orden cronológico: silent, boomers, x, millenials, z). 
+# Siendo un poco optimistas podemos pensar que el mundo ha ido mejorando. 
+# Además, las nuevas generaciones han sufrido menor impacto de las guerras y sus consecuencias.
+
+# CASO 3: Evolución de la tasa de suicidios en España y su relación con las crisis económicas
+
+# Como se puede observar, se confirma la hipótesis de que los suicidios aumentan con las crisis económicas. 
+# Los mayores aumentos se producen a raíz de las dos crisis económicas conocidas dentro del periodo estudiado: 
+# la de 1993 y la de 2008. En el primer caso, en el que además se parte de una bajada durante 3 años consecutivos, 
+# se alcanza en los 3 siguientes la tasa máxima de todo el periodo estudiado. 
+# En el segundo caso también tras una progresiva bajada (con algún repunte) 
+# se observa la mayor subida puntual de un año para otro.
+
 
 # 7 CÓDIGO
 
