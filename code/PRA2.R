@@ -16,12 +16,16 @@ library(stats)
 # Lectura de datos
 data <- read.csv("suicide.csv", header = TRUE, sep = ",", quote="\"", dec=".",fill = TRUE)
 dim(data) 
-# Tenemos 27820 observaciones y un total de 12 variables.
+# Tenemos 27820 observaciones y un total de 12 variables. Entre otras:
+# La variable sex tiene dos clases: female y male, ambas con la misma cantidad de registros.
+# La variable age tiene 6 clases, todas ellas con la misma cantidad de registros.
+# La variable generation tiene 6 clases con diferente cantidad de registros.
 summary(data)
 # Tipos de datos
 str(data)
 res <- sapply(data,class)
 kable(data.frame(variables=names(res),clase=as.vector(res)))
+
 
 # 2 INTEGRACIÓN Y SELECCIÓN DE LOS DATOS DE INTERÉS A ANALIZAR
 
@@ -29,6 +33,7 @@ kable(data.frame(variables=names(res),clase=as.vector(res)))
 # HDI.for.year tiene demasiados vacíos y country.year es un campo derivado
 d_suicides <- select(data, -HDI.for.year, -country.year)
 str(d_suicides)
+
 
 # 3 LIMPIEZA DE LOS DATOS
 
@@ -63,14 +68,10 @@ for (i in cols){
   }
 }
 
-# La variable sex tiene dos clases: female y male, ambas con la misma cantidad de registros
-# La variable age tiene 6 clases: "", ambas con la misma cantidad de registros.
-# La variable generation tiene 6 clases con diferente cantidad de registros.
 
+# 4 ANÁLISIS DE LOS DATOS
 
-# 4 ANALISIS DE LOS DATOS
-
-# 4.1 Seleccion de los grupos de datos que se quieren analizar
+# 4.1 Selección de los grupos de datos que se quieren analizar/comparar
 
 # ¿Es mayor la tasa de suicidios en hombres que en mujeres (en función del porcentaje de población)?
 #  - Atributos: sex, suicides_no, population
@@ -193,15 +194,9 @@ g + geom_line(stat="identity", color="green") +
        subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
+# 4.2 Comprobación de la normalidad y homogeneidad de la varianza
 
-# Proyección del número de suicidios en los siguientes 5 años.
-
-# Nota: Pregunta derivada en función de los resultados de la pregunta anterior.
-
-
-# 4.2 Comprobacion de la normalidad y homogeneidad de la varianza
-
-# Análisis de Normalidad
+# Análisis de normalidad
 
 par(mfrow=c(2,2))
 cols <- c("suicides_no", "population")
@@ -212,12 +207,21 @@ for (i in cols){
        main=paste("Histogram for ", i), 
        xlab=i, freq = FALSE)
 }
-# No son variables normales...
+# Se concluye que no son variables normales.
+# Análisis de homogeneidad de la varianza: no aplica.
 
-# Análisis de homogeneidad de la varianza
-
-# 4.3 Aplicando pruebas estadisticas para comparar grupos
+# 4.3 Aplicación de pruebas estadisticas para comparar los grupos de datos
 
 
+# 5 REPRESENTACIÓN DE LOS RESULTADOS A PARTIR DE TABLAS Y GRÁFICAS
+
+
+# 6 RESOLUCIÓN DEL PROBLEMA
+# A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿los resultados permiten responder al problema?
+
+
+# 7 CÓDIGO
+
+#  Se adjunta el código 
 
 
