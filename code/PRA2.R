@@ -128,7 +128,6 @@ percent_female
 
 # Empezamos clasificando los países en 3 niveles de riqueza, mediante el algoritmo k-means.
 # Se genera la columna nivel_riqueza (1=Segundo mundo; 2=Tercer; 3=Primer)
-
 # Atributos: suicides_no, population, generation, gdp_per_capita...., country, year
 
 suicides_2008 <- filter(d_suicides, year=='2008')
@@ -157,18 +156,12 @@ g + geom_bar(stat="identity", width = 0.5, fill='darkblue') +
        subtitle="Tasa de suicidios por generacion") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
-#¿Cómo ha evolucionado la tasa de suicidios desde el 1985 en España? 
-
-# - Atributos: suicides_no, population, year, country=Spain,  
-# -	Columna que sume el número por cada año (actualmente por cada anio existen 12 registros, 2 sex x 6 age).
-#-	Columna que sume la población por cada año.
-#-	Calcular la tasa de suicidios por cada año.
-#-	Graficar para identificar de picos o valores altos.
-
-
-
-
-### Suicidios en España
+# CASO 3: ¿Cómo ha evolucionado la tasa de suicidios desde 1985 en España? 
+# Atributos: suicides_no, population, year, country=Spain  
+# Creamos una columna que sume el número de suicidios por año (para cada año existen 12 registros, 2 sex x 6 age).
+# Creamos una columna que sume la población por año.
+# Calculamos la tasa de suicidios por año.
+# Graficamos para identificar picos o valores altos.
 
 suicides_spain <- select(data, ï..country, year, suicides_no, population)
 suicides_spain <- filter(d_suicides, ï..country=='Spain')
