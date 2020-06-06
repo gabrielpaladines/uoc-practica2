@@ -5,5 +5,8 @@ Autores: Gabriel Paladines y Jaime Pardo
 Ficheros:
 - Wiki.md
 - suicides.csv (Dataset original)
-- d_suicides.csv (Dataset final)
+- suicides_datos_finales.csv (Dataset final)
 - PRA2.R (código)
+- pra2.Rmd
+- pra2.html
+- pra2.pdf (informe)
