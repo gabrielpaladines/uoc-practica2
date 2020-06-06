@@ -111,7 +111,7 @@ g_case1
 # Comparamos por generación y tasa de suicidios para el año 2008.
 
 # Empezamos clasificando los países en 3 niveles de riqueza, mediante el algoritmo k-means.
-# Se genera la columna nivel_riqueza (1=Segundo mundo; 2=Tercer; 3=Primer)
+# Se genera la columna nivel_riqueza
 # Atributos: suicides_no, population, generation, gdp_per_capita...., country, year
 
 suicides_2008 <- filter(d_suicides, year=='2008')
