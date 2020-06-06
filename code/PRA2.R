@@ -92,24 +92,6 @@ g + geom_bar(stat="identity", width = 0.5, fill="tomato2") +
        subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
-# Alternativa de cálculo:
-
-d_suicides_male <- filter(d_suicides, sex=='male')
-d_suicides_female <- filter(d_suicides, sex=='female')
-
-total_suicides_male = colSums (select (d_suicides_male, contains ("suicides_no")))
-total_suicides_female = colSums (select (d_suicides_female, contains ("suicides_no")))
-
-total_pop_male = colSums (select (d_suicides_male, contains ("population")))
-total_pop_female = colSums (select (d_suicides_female, contains ("population")))
-
-# Tasa suicidios hombres y mujeres respectivamente:
-
-rate_male = total_suicides_male*100000 / total_pop_male
-rate_female = total_suicides_female*100000 / total_pop_female
-rate_male
-rate_female
-
 # Porcentaje suicidios hombres y mujeres respectivamente:
 
 percent_male = rate_male / (rate_male + rate_female)
