@@ -23,15 +23,18 @@ str(data)
 res <- sapply(data,class)
 kable(data.frame(variables=names(res),clase=as.vector(res)))
 
-# 2 INTEGRACION Y SELECCION DE DATOS
+# 2 INTEGRACIÓN Y SELECCIÓN DE LOS DATOS DE INTERÉS A ANALIZAR
 
 # Eliminar columnas
+# HDI.for.year tiene demasiados vacíos y country.year es un campo derivado
 d_suicides <- select(data, -HDI.for.year, -country.year)
 str(d_suicides)
 
-# 3 LIMPIEZA DE DATOS
+# 3 LIMPIEZA DE LOS DATOS
 
-# 3.1 Los datos que contienen ceros o elementos vacíos
+# 3.1 ¿Los datos contienen ceros o elementos vacíos? ¿Cómo gestionarías cada uno de estos casos?
+# Suicides y Suicides/100kpop tienen ceros, pero son valores correctos y no requieren una gestión especial
+# HDI.for.year contiene un 70% de vacíos. Es difícil completar con valores fiables, por ello se decide descartarlo.
 colSums(is.na(d_suicides))
 colSums(d_suicides=="")
 colSums(d_suicides=="0")
