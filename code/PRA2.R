@@ -247,3 +247,6 @@ g_case3
 
 #  Se adjunta el código 
 
+# 8 OTROS
+
+write.csv(d_suicides, file="suicides_datos_finales.csv")
