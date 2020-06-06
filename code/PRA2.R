@@ -1,30 +1,45 @@
-# Iniciando PRA2
-# https://www.kaggle.com/rushirdx/suicide-rates-from-1986-to-2016/data
+# Tipología y ciclo de vida de los datos - Práctica 2
+# Autores: Gabriel Paladines y Jaime Pardo
+# Dataset: https://www.kaggle.com/rushirdx/suicide-rates-from-1986-to-2016/data
 library(dplyr)
 library(knitr)
 library(ggplot2)
+library(stats)
 
-# 1 DESCRIPCION DEL DATASET
+# 1 DESCRIPCIÓN DEL DATASET
+# ¿Por qué es importante y qué pregunta/problema pretende responder?
+# Este dataset contiene diversos parámetros con los que se puede establecer correlación/causalidad con el suicidio. 
+# Pretende responder a preguntar del tipo: ¿el suicidio afecta más a los hombres o a las mujeres? 
+# ¿tiene más impacto entre personas de una determinada edad o generación?
+# ¿cómo influye el nuvel de riqueza del país en el que viven?
 
 # Lectura de datos
-data <- read.csv("../data/suicide.csv", header = TRUE, sep = ",", quote="\"", dec=".",fill = TRUE)
+data <- read.csv("suicide.csv", header = TRUE, sep = ",", quote="\"", dec=".",fill = TRUE)
 dim(data) 
-# Tenemos 27820 observaciones y un total de 12 variables.
+# Tenemos 27820 observaciones y un total de 12 variables. Entre otras:
+# La variable sex tiene dos clases: female y male, ambas con la misma cantidad de registros.
+# La variable age tiene 6 clases, todas ellas con la misma cantidad de registros.
+# La variable generation tiene 6 clases con diferente cantidad de registros.
 summary(data)
 # Tipos de datos
 str(data)
 res <- sapply(data,class)
 kable(data.frame(variables=names(res),clase=as.vector(res)))
 
-# 2 INTEGRACION Y SELECCION DE DATOS
+
+# 2 INTEGRACIÓN Y SELECCIÓN DE LOS DATOS DE INTERÉS A ANALIZAR
 
 # Eliminar columnas
+# HDI.for.year tiene demasiados vacíos y country.year es un campo derivado
 d_suicides <- select(data, -HDI.for.year, -country.year)
 str(d_suicides)
 
-# 3 LIMIPIEZA DE DATOS
 
-# 3.1 Los datos que contienen ceros o elementos vacíos
+# 3 LIMPIEZA DE LOS DATOS
+
+# 3.1 ¿Los datos contienen ceros o elementos vacíos? ¿Cómo gestionarías cada uno de estos casos?
+# Suicides y Suicides/100kpop tienen ceros, pero son valores correctos y no requieren una gestión especial
+# HDI.for.year contiene un 70% de vacíos. Es difícil completar con valores fiables, por ello se decide descartarlo.
 colSums(is.na(d_suicides))
 colSums(d_suicides=="")
 colSums(d_suicides=="0")
@@ -53,75 +68,23 @@ for (i in cols){
   }
 }
 
-# La variable sex tiene dos clases: female y male, ambas con la misma cantidad de registros
-# La variable age tiene 6 clases: "", ambas con la misma cantidad de registros.
-# La variable generation tiene 6 clases con diferente cantidad de registros.
 
+# 4 ANÁLISIS DE LOS DATOS
 
-# 4 ANALISIS DE LOS DATOS
+# 4.1 Selección de los grupos de datos que se quieren analizar/comparar
 
-# 4.1 Seleccion de los grupos de datos que se quieren analizar
+# CASO 1: ¿Es mayor la tasa de suicidios en hombres que en mujeres (en función del porcentaje de población)?
+# Seleccionamos atributos: sex, suicides_no, population.
+# Calculamos la tasa de suicidios por sexo.
+# Representamos gráficamente una comparativa entre la tasa de suicidios de hombres y mujeres.
 
-# ¿Es mayor la tasa de suicidios en hombres que en mujeres (en función del porcentaje de población)?
-#  - Atributos: sex, suicides_no, population
-#  - Calcular la tasa de suicidios por sex.
-#  - Gráfica o tabla donde se muestra una comparativa entre la tasa de suicidios entre hombres y mujeres.
-
-
-
-#¿Qué generación tiene una tasa más alta de suicidios según el nivel de riqueza de su país en el 2008 durante la crisis económica mundial?
-  
-#  -  Atributos: suicides_no, population, generation, gdp_per_capita...., country, year
-#  -	Clasificar los países según el producto interno bruto gdp_for_capita para el 2008.
-#  -	Agregar una columna nueva con la clasificación en 3 grupos (Primer mundo, segundo mundo, tercer mundo), para esto utilizaremos un algoritmo de clasificación no supervisado.
-#  -  Calcular la tasa de suicidios por generación / nivel de riqueza.
-#  -	Comparativa por generación y tasa de suicidios para el año 2008.
-
-
-#¿Cómo ha evolucionado la tasa de suicidios desde el 1985 en España? 
-
-# - Atributos: suicides_no, population, year, country=Spain,  
-# -	Columna que sume el número por cada año (actualmente por cada anio existen 12 registros, 2 sex x 6 age).
-#-	Columna que sume la población por cada año.
-#-	Calcular la tasa de suicidios por cada año.
-#-	Graficar para identificar de picos o valores altos.
-
-# Proyección del número de suicidios en los siguientes 5 años.
-
-# Nota: Pregunta derivada en función de los resultados de la pregunta anterior.
-
-
-# 4.2 Comprobacion de la normalidad y homogeneidad de la varianza
-
-# Análisis de Normalidad
-
-par(mfrow=c(2,2))
-cols <- c("suicides_no", "population")
-for (i in cols){
-  qqnorm(d_suicides[,i],main = paste("Normal Q-Q Plot for ", i))
-  qqline(d_suicides[,i],col="red")
-  hist(d_suicides[,i], 
-        main=paste("Histogram for ", i), 
-        xlab=i, freq = FALSE)
-}
- # No son variables normales...
-
-# Análisis de homogeneidad de la varianza
-
-# 4.3 Aplicando pruebas estadisticas para comparar grupos
-
-
-# ¿Es mayor la tasa de suicidios en hombres que en mujeres (en función del porcentaje de población)?
-#  - Atributos: sex, suicides_no, population
-#  - Calcular la tasa de suicidios por sex.
-#  - Gráfica o tabla donde se muestra una comparativa entre la tasa de suicidios entre hombres y mujeres.
 df  <- d_suicides %>% select(sex, suicides_no, population)
 df[2:3] <- lapply(df[2:3], as.numeric)
 report <- df %>%
   group_by(sex) %>%
   summarise_all(funs(sum)) %>%
   mutate(suicides_100k_pop = suicides_no / population * 100000)
-
+report
 theme_set(theme_classic())
 g <- ggplot(report, aes(sex,suicides_100k_pop))
 g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
@@ -129,13 +92,25 @@ g + geom_bar(stat="identity", width = 0.5, fill="tomato2") +
        subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
-#¿Qué generación tiene una tasa más alta de suicidios según el nivel de riqueza de su país en el 2008 durante la crisis económica mundial?
+# Porcentaje suicidios hombres y mujeres respectivamente:
 
-#  -  Atributos: suicides_no, population, generation, gdp_per_capita...., country, year
-#  -	Clasificar los países según el producto interno bruto gdp_for_capita para el 2008.
-#  -	Agregar una columna nueva con la clasificación en 3 grupos (Primer mundo, segundo mundo, tercer mundo), para esto utilizaremos un algoritmo de clasificación no supervisado.
-#  -  Calcular la tasa de suicidios por generación / nivel de riqueza.
-#  -	Comparativa por generación y tasa de suicidios para el año 2008.
+percent_male = rate_male / (rate_male + rate_female)
+percent_female = rate_female / (rate_male + rate_female)
+percent_male
+percent_female
+
+# Conclusión: la tasa de suicidios en hombres es mayor que en mujeres, más del triple (20.7 vs. 5.94).
+# En total representan el 77,7% de los suicidios.
+
+
+# CASO 2: ¿Qué generación tiene mayor tasa de suicidios según el nivel de riqueza de su país en 2008 (crisis económica mundial?
+# Clasificamos los países según el producto interior bruto (gdp_per_capita) para el 2008.
+# Calculamos la tasa de suicidios por generación / nivel de riqueza.
+# Comparamos por generación y tasa de suicidios para el año 2008.
+
+# Empezamos clasificando los países en 3 niveles de riqueza, mediante el algoritmo k-means.
+# Se genera la columna nivel_riqueza (1=Segundo mundo; 2=Tercer; 3=Primer)
+# Atributos: suicides_no, population, generation, gdp_per_capita...., country, year
 
 suicides_2008 <- filter(d_suicides, year=='2008')
 
@@ -147,8 +122,6 @@ plot(modelo$cluster)
 suicides_2008$nivel_riqueza <- modelo$cluster
 suicides_2008
 par(mfrow=c(2,2))
-
-# NIVEL DE RIQUEZA 1
 suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==1)
 df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
 df[2:3] <- lapply(df[2:3], as.numeric)
@@ -156,58 +129,24 @@ report <- df %>%
   group_by(generation) %>%
   summarise_all(funs(sum)) %>%
   mutate(suicides_100k_pop = suicides_no / population * 100000)
-  
+
 report
-  
+
 g <- ggplot(report, aes(generation,suicides_100k_pop))
-g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
+g + geom_bar(stat="identity", width = 0.5, fill='darkblue') + 
   labs(title=paste("SUICIDIOS 2008 NIVEL RIQUEZA ", 1) , 
-         subtitle="Tasa de suicidios por generacion") +
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
-  
-## NIVEL DE RIQUEZA 2
-suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==2)
-df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
-df[2:3] <- lapply(df[2:3], as.numeric)
-report <- df %>%
-  group_by(generation) %>%
-  summarise_all(funs(sum)) %>%
-  mutate(suicides_100k_pop = suicides_no / population * 100000)
-
-report
-
-g <- ggplot(report, aes(generation,suicides_100k_pop))
-g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
-  labs(title=paste("SUICIDIOS 2008 NIVEL RIQUEZA ", 2) , 
        subtitle="Tasa de suicidios por generacion") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
-## NIVEL DE RIQUEZA 3
-suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==3)
-df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
-df[2:3] <- lapply(df[2:3], as.numeric)
-report <- df %>%
-  group_by(generation) %>%
-  summarise_all(funs(sum)) %>%
-  mutate(suicides_100k_pop = suicides_no / population * 100000)
+# CASO 3: ¿Cómo ha evolucionado la tasa de suicidios desde 1985 en España? 
+# Atributos: suicides_no, population, year, country=Spain  
+# Creamos una columna que sume el número de suicidios por año (para cada año existen 12 registros, 2 sex x 6 age).
+# Creamos una columna que sume la población por año.
+# Calculamos la tasa de suicidios por año.
+# Graficamos para identificar picos o valores altos.
 
-report
-
-g <- ggplot(report, aes(generation,suicides_100k_pop))
-g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
-  labs(title=paste("SUICIDIOS 2008 NIVEL RIQUEZA ", 3) , 
-       subtitle="Tasa de suicidios por generacion") +
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
-
-#¿Cómo ha evolucionado la tasa de suicidios desde el 1985 en España? 
-
-# - Atributos: suicides_no, population, year, country=Spain,  
-# -	Columna que sume el número por cada año (actualmente por cada anio existen 12 registros, 2 sex x 6 age).
-#-	Columna que sume la población por cada año.
-#-	Calcular la tasa de suicidios por cada año.
-#-	Graficar para identificar de picos o valores altos.
-
-suicides_spain <- filter(d_suicides, country=='Spain')
+suicides_spain <- select(data, ï..country, year, suicides_no, population)
+suicides_spain <- filter(d_suicides, ï..country=='Spain')
 df  <- suicides_spain %>% select(year, suicides_no, population)
 df[2:3] <- lapply(df[2:3], as.numeric)
 report <- df %>%
@@ -215,9 +154,41 @@ report <- df %>%
   summarise_all(funs(sum)) %>%
   mutate(suicides_100k_pop = suicides_no / population * 100000)
 report
-print(report)
+
+theme_set(theme_classic())
 g <- ggplot(report, aes(year,suicides_100k_pop))
-g + geom_line(stat="identity", color="tomato2") + 
-  labs(title="SUICIDIOS ESPAÑA", 
-       subtitle="Tasa de suicidios por ano en espana") +
+g + geom_line(stat="identity", color="green") + 
+  labs(title="Bar Chart", 
+       subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+# 4.2 Comprobación de la normalidad y homogeneidad de la varianza
+
+# Análisis de normalidad
+
+par(mfrow=c(2,2))
+cols <- c("suicides_no", "population")
+for (i in cols){
+  qqnorm(d_suicides[,i],main = paste("Normal Q-Q Plot for ", i))
+  qqline(d_suicides[,i],col="red")
+  hist(d_suicides[,i], 
+       main=paste("Histogram for ", i), 
+       xlab=i, freq = FALSE)
+}
+# Se concluye que no son variables normales.
+# Análisis de homogeneidad de la varianza: no aplica.
+
+# 4.3 Aplicación de pruebas estadisticas para comparar los grupos de datos
+
+
+# 5 REPRESENTACIÓN DE LOS RESULTADOS A PARTIR DE TABLAS Y GRÁFICAS
+
+
+# 6 RESOLUCIÓN DEL PROBLEMA
+# A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿los resultados permiten responder al problema?
+
+
+# 7 CÓDIGO
+
+#  Se adjunta el código 
+
