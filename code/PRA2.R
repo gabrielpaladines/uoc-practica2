@@ -7,6 +7,11 @@ library(ggplot2)
 library(stats)
 
 # 1 DESCRIPCIÓN DEL DATASET
+# ¿Por qué es importante y qué pregunta/problema pretende responder?
+# Este dataset contiene diversos parámetros con los que se puede establecer correlación/causalidad con el suicidio. 
+# Pretende responder a preguntar del tipo: ¿el suicidio afecta más a los hombres o a las mujeres? 
+# ¿tiene más impacto entre personas de una determinada edad o generación?
+# ¿cómo influye el nuvel de riqueza del país en el que viven?
 
 # Lectura de datos
 data <- read.csv("suicide.csv", header = TRUE, sep = ",", quote="\"", dec=".",fill = TRUE)
