@@ -80,17 +80,19 @@ for (i in cols){
 
 df  <- d_suicides %>% select(sex, suicides_no, population)
 df[2:3] <- lapply(df[2:3], as.numeric)
-report <- df %>%
+report_case1 <- df %>%
   group_by(sex) %>%
   summarise_all(funs(sum)) %>%
   mutate(suicides_100k_pop = suicides_no / population * 100000)
-report
+head(report_case1)
 theme_set(theme_classic())
-g <- ggplot(report, aes(sex,suicides_100k_pop))
-g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
-  labs(title="Bar Chart", 
+par(mfrow=c(1,1))
+g_case1 <- ggplot(report_case1, aes(sex,suicides_100k_pop)) + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
+  labs(title="CASO 1: Comparativo tasa de suicidios entre hombes y mujeres", 
        subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+g_case1
 
 # Porcentaje suicidios hombres y mujeres respectivamente:
 
@@ -117,12 +119,13 @@ suicides_2008 <- filter(d_suicides, year=='2008')
 modelo <- kmeans(suicides_2008$gdp_per_capita...., centers = 3)
 modelo
 modelo$cluster
+par(mfrow=c(1,1))
 plot(modelo$cluster)
 
 suicides_2008$nivel_riqueza <- modelo$cluster
 head(suicides_2008)
 
-total <- tibble()
+report_case2 <- tibble()
 
 for (idx in (1:3)) {
   suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==idx)
@@ -133,17 +136,18 @@ for (idx in (1:3)) {
     group_by(generation) %>%
     summarise_all(funs(sum)) %>%
     mutate(suicides_100k_pop = suicides_no / population * 100000) %>%
-    mutate(nivel_riqueza= paste("Mundo ", idx))
+    mutate(nivel_riqueza= paste("Nivel ", idx))
   
   print(paste("Nivel de Riqueza ", idx))
   print(report)
-  total <- rbind(total, report)
+  report_case2 <- rbind(report_case2, report)
 }
 
-total
+head(report_case2)
 
-g <- ggplot(total, aes(fill=nivel_riqueza,y=suicides_100k_pop,x=generation))
-g + geom_bar(position="dodge", stat="identity")
+g_case2 <- ggplot(report_case2, aes(fill=nivel_riqueza,y=suicides_100k_pop,x=generation)) + geom_bar(position="dodge", stat="identity") + 
+  labs(title="CASO 2: Comparativo tasa de suicidios de acuerdo a su generacion y nivel de riqueza")
+g_case2
 
 # CASO 3: ¿Cómo ha evolucionado la tasa de suicidios desde 1985 en España? 
 # Atributos: suicides_no, population, year, country=Spain  
@@ -156,17 +160,16 @@ suicides_spain <- select(data, country, year, suicides_no, population)
 suicides_spain <- filter(d_suicides, country=='Spain')
 df  <- suicides_spain %>% select(year, suicides_no, population)
 df[2:3] <- lapply(df[2:3], as.numeric)
-report <- df %>%
+report_case3 <- df %>%
   group_by(year) %>%
   summarise_all(funs(sum)) %>%
   mutate(suicides_100k_pop = suicides_no / population * 100000)
-report
+head(report_case3)
 
-g <- ggplot(report, aes(year,suicides_100k_pop))
-g + geom_line(stat="identity", color="darkgreen") + 
-  labs(title="Bar Chart", 
-       subtitle="Tasa de suicidios por genero") +
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+g_case3 <- ggplot(report_case3, aes(x=year,y=suicides_100k_pop)) + geom_line(stat="identity", color="darkgreen", linetype="dotted") + 
+  labs(title="CASO 3: Evolución de la tasa de suicidios en España desde 1985 hasta 2015") +
+  geom_point(color="darkgreen")
+g_case3
 
 # 4.2 Comprobación de la normalidad y homogeneidad de la varianza
 
@@ -188,7 +191,13 @@ for (i in cols){
 
 
 # 5 REPRESENTACIÓN DE LOS RESULTADOS A PARTIR DE TABLAS Y GRÁFICAS
-
+par(mfrow=c(2,2))
+report_case1
+g_case1
+report_case2
+g_case2
+report_case3
+g_case3
 
 # 6 RESOLUCIÓN DEL PROBLEMA
 # A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿los resultados permiten responder al problema?
