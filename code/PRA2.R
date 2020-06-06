@@ -1,11 +1,12 @@
-# Iniciando PRA2
-# https://www.kaggle.com/rushirdx/suicide-rates-from-1986-to-2016/data
+# Tipolog√≠a y ciclo de vida de los datos - Pr√°ctica 2
+# Autores: Gabriel Paladines y Jaime Pardo
+# Dataset: https://www.kaggle.com/rushirdx/suicide-rates-from-1986-to-2016/data
 library(dplyr)
 library(knitr)
 library(ggplot2)
 library(stats)
 
-# 1 DESCRIPCION DEL DATASET
+# 1 DESCRIPCI√ìN DEL DATASET
 
 # Lectura de datos
 data <- read.csv("suicide.csv", header = TRUE, sep = ",", quote="\"", dec=".",fill = TRUE)
@@ -25,14 +26,14 @@ str(d_suicides)
 
 # 3 LIMPIEZA DE DATOS
 
-# 3.1 Los datos que contienen ceros o elementos vacÌos
+# 3.1 Los datos que contienen ceros o elementos vac√≠os
 colSums(is.na(d_suicides))
 colSums(d_suicides=="")
 colSums(d_suicides=="0")
 
-# 3.2 IdentificaciÛn y tratamiento de valores extremos
+# 3.2 Identificaci√≥n y tratamiento de valores extremos
 
-# An·lisis mediante diagramas de cajas e histogramas
+# An√°lisis mediante diagramas de cajas e histogramas
 par(mfrow=c(2,2))
 cols <- c("suicides_no","population")
 for(i in cols) {
@@ -42,7 +43,7 @@ for(i in cols) {
   }
 }
 
-# Por la naturaleza de las variables population y suicides, no siguen una distribuciÛn normal.
+# Por la naturaleza de las variables population y suicides, no siguen una distribuci√≥n normal.
 
 par(mfrow=c(2,2))
 cols <- c("sex","age","generation")
@@ -63,10 +64,10 @@ for (i in cols){
 
 # 4.1 Seleccion de los grupos de datos que se quieren analizar
 
-# øEs mayor la tasa de suicidios en hombres que en mujeres (en funciÛn del porcentaje de poblaciÛn)?
+# ¬øEs mayor la tasa de suicidios en hombres que en mujeres (en funci√≥n del porcentaje de poblaci√≥n)?
 #  - Atributos: sex, suicides_no, population
 #  - Calcular la tasa de suicidios por sex.
-#  - Gr·fica o tabla donde se muestra una comparativa entre la tasa de suicidios entre hombres y mujeres.
+#  - Gr√°fica o tabla donde se muestra una comparativa entre la tasa de suicidios entre hombres y mujeres.
 
 
 d_suicides_male <- filter(d_suicides, sex=='male')
@@ -82,7 +83,7 @@ total_suicides_female
 total_pop_male = colSums (select (d_suicides_male, contains ("population")))
 total_pop_female = colSums (select (d_suicides_female, contains ("population")))
 
-# Total poblaciÛn hombres y mujeres respectivamente:
+# Total poblaci√≥n hombres y mujeres respectivamente:
 total_pop_male
 total_pop_female
 
@@ -100,18 +101,18 @@ percent_female = rate_female / (rate_male + rate_female)
 percent_male
 percent_female
 
-# ConclusiÛn: la tasa de suicidios en hombres es mayor que en mujeres, m·s del triple (20.7 vs. 5.94)
+# Conclusi√≥n: la tasa de suicidios en hombres es mayor que en mujeres, m√°s del triple (20.7 vs. 5.94)
 # En total representan el 77,7% de los suicidios
 
 
-#øQuÈ generaciÛn tiene una tasa m·s alta de suicidios seg˙n el nivel de riqueza de su paÌs en el 2008 durante la crisis econÛmica mundial?
+#¬øQu√© generaci√≥n tiene una tasa m√°s alta de suicidios seg√∫n el nivel de riqueza de su pa√≠s en el 2008 durante la crisis econ√≥mica mundial?
 
 
-#  -	Clasificar los paÌses seg˙n el producto interno bruto gdp_for_capita para el 2008.
-#  -  Calcular la tasa de suicidios por generaciÛn / nivel de riqueza.
-#  -	Comparativa por generaciÛn y tasa de suicidios para el aÒo 2008.
+#  -	Clasificar los pa√≠ses seg√∫n el producto interno bruto gdp_for_capita para el 2008.
+#  -  Calcular la tasa de suicidios por generaci√≥n / nivel de riqueza.
+#  -	Comparativa por generaci√≥n y tasa de suicidios para el a√±o 2008.
 
-# Empezamos clasificando los paÌses en 3 niveles de riqueza, mediante el algoritmo k-means.
+# Empezamos clasificando los pa√≠ses en 3 niveles de riqueza, mediante el algoritmo k-means.
 # Se genera la columna nivel_riqueza (1=Segundo mundo; 2=Tercer; 3=Primer)
 
 # Atributos: suicides_no, population, generation, gdp_per_capita...., country, year
@@ -142,12 +143,12 @@ g + geom_bar(stat="identity", width = 0.5, fill='darkblue') +
        subtitle="Tasa de suicidios por generacion") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
-#øCÛmo ha evolucionado la tasa de suicidios desde el 1985 en EspaÒa? 
+#¬øC√≥mo ha evolucionado la tasa de suicidios desde el 1985 en Espa√±a? 
 
 # - Atributos: suicides_no, population, year, country=Spain,  
-# -	Columna que sume el n˙mero por cada aÒo (actualmente por cada anio existen 12 registros, 2 sex x 6 age).
-#-	Columna que sume la poblaciÛn por cada aÒo.
-#-	Calcular la tasa de suicidios por cada aÒo.
+# -	Columna que sume el n√∫mero por cada a√±o (actualmente por cada anio existen 12 registros, 2 sex x 6 age).
+#-	Columna que sume la poblaci√≥n por cada a√±o.
+#-	Calcular la tasa de suicidios por cada a√±o.
 #-	Graficar para identificar de picos o valores altos.
 
 
@@ -165,10 +166,10 @@ g + geom_bar(stat="identity", width = 0.5, fill="tomato2") +
        subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
-### Suicidios en EspaÒa
+### Suicidios en Espa√±a
 
-suicides_spain <- select(data, Ô..country, year, suicides_no, population)
-suicides_spain <- filter(d_suicides, Ô..country=='Spain')
+suicides_spain <- select(data, √Ø..country, year, suicides_no, population)
+suicides_spain <- filter(d_suicides, √Ø..country=='Spain')
 df  <- suicides_spain %>% select(year, suicides_no, population)
 df[2:3] <- lapply(df[2:3], as.numeric)
 report <- df %>%
@@ -185,14 +186,14 @@ g + geom_line(stat="identity", color="green") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
 
-# ProyecciÛn del n˙mero de suicidios en los siguientes 5 aÒos.
+# Proyecci√≥n del n√∫mero de suicidios en los siguientes 5 a√±os.
 
-# Nota: Pregunta derivada en funciÛn de los resultados de la pregunta anterior.
+# Nota: Pregunta derivada en funci√≥n de los resultados de la pregunta anterior.
 
 
 # 4.2 Comprobacion de la normalidad y homogeneidad de la varianza
 
-# An·lisis de Normalidad
+# An√°lisis de Normalidad
 
 par(mfrow=c(2,2))
 cols <- c("suicides_no", "population")
@@ -205,7 +206,7 @@ for (i in cols){
 }
 # No son variables normales...
 
-# An·lisis de homogeneidad de la varianza
+# An√°lisis de homogeneidad de la varianza
 
 # 4.3 Aplicando pruebas estadisticas para comparar grupos
 
