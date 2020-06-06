@@ -14,7 +14,7 @@ library(stats)
 # ¿cómo influye el nuvel de riqueza del país en el que viven?
 
 # Lectura de datos
-data <- read.csv("suicide.csv", header = TRUE, sep = ",", quote="\"", dec=".",fill = TRUE)
+data <- read.csv("../data/suicide.csv", header = TRUE, sep = ",", quote="\"", dec=".",fill = TRUE)
 dim(data) 
 # Tenemos 27820 observaciones y un total de 12 variables. Entre otras:
 # La variable sex tiene dos clases: female y male, ambas con la misma cantidad de registros.
@@ -94,10 +94,10 @@ g + geom_bar(stat="identity", width = 0.5, fill="tomato2") +
 
 # Porcentaje suicidios hombres y mujeres respectivamente:
 
-percent_male = rate_male / (rate_male + rate_female)
-percent_female = rate_female / (rate_male + rate_female)
-percent_male
-percent_female
+#percent_male = rate_male / (rate_male + rate_female)
+#percent_female = rate_female / (rate_male + rate_female)
+#percent_male
+#percent_female
 
 # Conclusión: la tasa de suicidios en hombres es mayor que en mujeres, más del triple (20.7 vs. 5.94).
 # En total representan el 77,7% de los suicidios.
@@ -120,23 +120,30 @@ modelo$cluster
 plot(modelo$cluster)
 
 suicides_2008$nivel_riqueza <- modelo$cluster
-suicides_2008
-par(mfrow=c(2,2))
-suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==1)
-df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
-df[2:3] <- lapply(df[2:3], as.numeric)
-report <- df %>%
-  group_by(generation) %>%
-  summarise_all(funs(sum)) %>%
-  mutate(suicides_100k_pop = suicides_no / population * 100000)
+head(suicides_2008)
 
-report
+total <- tibble()
 
-g <- ggplot(report, aes(generation,suicides_100k_pop))
-g + geom_bar(stat="identity", width = 0.5, fill='darkblue') + 
-  labs(title=paste("SUICIDIOS 2008 NIVEL RIQUEZA ", 1) , 
-       subtitle="Tasa de suicidios por generacion") +
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+for (idx in (1:3)) {
+  suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==idx)
+  df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
+  
+  df[2:3] <- lapply(df[2:3], as.numeric)
+  report <- df %>%
+    group_by(generation) %>%
+    summarise_all(funs(sum)) %>%
+    mutate(suicides_100k_pop = suicides_no / population * 100000) %>%
+    mutate(nivel_riqueza= paste("Mundo ", idx))
+  
+  print(paste("Nivel de Riqueza ", idx))
+  print(report)
+  total <- rbind(total, report)
+}
+
+total
+
+g <- ggplot(total, aes(fill=nivel_riqueza,y=suicides_100k_pop,x=generation))
+g + geom_bar(position="dodge", stat="identity")
 
 # CASO 3: ¿Cómo ha evolucionado la tasa de suicidios desde 1985 en España? 
 # Atributos: suicides_no, population, year, country=Spain  
@@ -145,8 +152,8 @@ g + geom_bar(stat="identity", width = 0.5, fill='darkblue') +
 # Calculamos la tasa de suicidios por año.
 # Graficamos para identificar picos o valores altos.
 
-suicides_spain <- select(data, ï..country, year, suicides_no, population)
-suicides_spain <- filter(d_suicides, ï..country=='Spain')
+suicides_spain <- select(data, country, year, suicides_no, population)
+suicides_spain <- filter(d_suicides, country=='Spain')
 df  <- suicides_spain %>% select(year, suicides_no, population)
 df[2:3] <- lapply(df[2:3], as.numeric)
 report <- df %>%
@@ -155,9 +162,8 @@ report <- df %>%
   mutate(suicides_100k_pop = suicides_no / population * 100000)
 report
 
-theme_set(theme_classic())
 g <- ggplot(report, aes(year,suicides_100k_pop))
-g + geom_line(stat="identity", color="green") + 
+g + geom_line(stat="identity", color="darkgreen") + 
   labs(title="Bar Chart", 
        subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
