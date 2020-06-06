@@ -73,11 +73,26 @@ for (i in cols){
 
 # 4.1 Selección de los grupos de datos que se quieren analizar/comparar
 
-# ¿Es mayor la tasa de suicidios en hombres que en mujeres (en función del porcentaje de población)?
-#  - Atributos: sex, suicides_no, population
-#  - Calcular la tasa de suicidios por sex.
-#  - Gráfica o tabla donde se muestra una comparativa entre la tasa de suicidios entre hombres y mujeres.
+# CASO 1: ¿Es mayor la tasa de suicidios en hombres que en mujeres (en función del porcentaje de población)?
+# Seleccionamos atributos: sex, suicides_no, population.
+# Calculamos la tasa de suicidios por sexo.
+# Representamos gráficamente una comparativa entre la tasa de suicidios de hombres y mujeres.
 
+df  <- d_suicides %>% select(sex, suicides_no, population)
+df[2:3] <- lapply(df[2:3], as.numeric)
+report <- df %>%
+  group_by(sex) %>%
+  summarise_all(funs(sum)) %>%
+  mutate(suicides_100k_pop = suicides_no / population * 100000)
+report
+theme_set(theme_classic())
+g <- ggplot(report, aes(sex,suicides_100k_pop))
+g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
+  labs(title="Bar Chart", 
+       subtitle="Tasa de suicidios por genero") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+# Alternativa de cálculo:
 
 d_suicides_male <- filter(d_suicides, sex=='male')
 d_suicides_female <- filter(d_suicides, sex=='female')
@@ -85,41 +100,31 @@ d_suicides_female <- filter(d_suicides, sex=='female')
 total_suicides_male = colSums (select (d_suicides_male, contains ("suicides_no")))
 total_suicides_female = colSums (select (d_suicides_female, contains ("suicides_no")))
 
-# Total suicidios hombres y mujeres respectivamente:
-total_suicides_male
-total_suicides_female
-
 total_pop_male = colSums (select (d_suicides_male, contains ("population")))
 total_pop_female = colSums (select (d_suicides_female, contains ("population")))
 
-# Total población hombres y mujeres respectivamente:
-total_pop_male
-total_pop_female
+# Tasa suicidios hombres y mujeres respectivamente:
 
 rate_male = total_suicides_male*100000 / total_pop_male
 rate_female = total_suicides_female*100000 / total_pop_female
-
-# Tasa suicidios hombres y mujeres respectivamente:
 rate_male
 rate_female
 
+# Porcentaje suicidios hombres y mujeres respectivamente:
+
 percent_male = rate_male / (rate_male + rate_female)
 percent_female = rate_female / (rate_male + rate_female)
-
-# Porcentaje suicidios hombres y mujeres respectivamente:
 percent_male
 percent_female
 
-# Conclusión: la tasa de suicidios en hombres es mayor que en mujeres, más del triple (20.7 vs. 5.94)
-# En total representan el 77,7% de los suicidios
+# Conclusión: la tasa de suicidios en hombres es mayor que en mujeres, más del triple (20.7 vs. 5.94).
+# En total representan el 77,7% de los suicidios.
 
 
-#¿Qué generación tiene una tasa más alta de suicidios según el nivel de riqueza de su país en el 2008 durante la crisis económica mundial?
-
-
-#  -	Clasificar los países según el producto interno bruto gdp_for_capita para el 2008.
-#  -  Calcular la tasa de suicidios por generación / nivel de riqueza.
-#  -	Comparativa por generación y tasa de suicidios para el año 2008.
+# CASO 2: ¿Qué generación tiene mayor tasa de suicidios según el nivel de riqueza de su país en 2008 (crisis económica mundial?
+# Clasificamos los países según el producto interior bruto (gdp_per_capita) para el 2008.
+# Calculamos la tasa de suicidios por generación / nivel de riqueza.
+# Comparamos por generación y tasa de suicidios para el año 2008.
 
 # Empezamos clasificando los países en 3 niveles de riqueza, mediante el algoritmo k-means.
 # Se genera la columna nivel_riqueza (1=Segundo mundo; 2=Tercer; 3=Primer)
@@ -161,19 +166,7 @@ g + geom_bar(stat="identity", width = 0.5, fill='darkblue') +
 #-	Graficar para identificar de picos o valores altos.
 
 
-df  <- d_suicides %>% select(sex, suicides_no, population)
-df[2:3] <- lapply(df[2:3], as.numeric)
-report <- df %>%
-  group_by(sex) %>%
-  summarise_all(funs(sum)) %>%
-  mutate(suicides_100k_pop = suicides_no / population * 100000)
-report
-theme_set(theme_classic())
-g <- ggplot(report, aes(sex,suicides_100k_pop))
-g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
-  labs(title="Bar Chart", 
-       subtitle="Tasa de suicidios por genero") +
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
 
 ### Suicidios en España
 
