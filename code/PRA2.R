@@ -129,4 +129,95 @@ g + geom_bar(stat="identity", width = 0.5, fill="tomato2") +
        subtitle="Tasa de suicidios por genero") +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 
+#¿Qué generación tiene una tasa más alta de suicidios según el nivel de riqueza de su país en el 2008 durante la crisis económica mundial?
 
+#  -  Atributos: suicides_no, population, generation, gdp_per_capita...., country, year
+#  -	Clasificar los países según el producto interno bruto gdp_for_capita para el 2008.
+#  -	Agregar una columna nueva con la clasificación en 3 grupos (Primer mundo, segundo mundo, tercer mundo), para esto utilizaremos un algoritmo de clasificación no supervisado.
+#  -  Calcular la tasa de suicidios por generación / nivel de riqueza.
+#  -	Comparativa por generación y tasa de suicidios para el año 2008.
+
+suicides_2008 <- filter(d_suicides, year=='2008')
+
+modelo <- kmeans(suicides_2008$gdp_per_capita...., centers = 3)
+modelo
+modelo$cluster
+plot(modelo$cluster)
+
+suicides_2008$nivel_riqueza <- modelo$cluster
+suicides_2008
+par(mfrow=c(2,2))
+
+# NIVEL DE RIQUEZA 1
+suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==1)
+df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
+df[2:3] <- lapply(df[2:3], as.numeric)
+report <- df %>%
+  group_by(generation) %>%
+  summarise_all(funs(sum)) %>%
+  mutate(suicides_100k_pop = suicides_no / population * 100000)
+  
+report
+  
+g <- ggplot(report, aes(generation,suicides_100k_pop))
+g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
+  labs(title=paste("SUICIDIOS 2008 NIVEL RIQUEZA ", 1) , 
+         subtitle="Tasa de suicidios por generacion") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+  
+## NIVEL DE RIQUEZA 2
+suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==2)
+df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
+df[2:3] <- lapply(df[2:3], as.numeric)
+report <- df %>%
+  group_by(generation) %>%
+  summarise_all(funs(sum)) %>%
+  mutate(suicides_100k_pop = suicides_no / population * 100000)
+
+report
+
+g <- ggplot(report, aes(generation,suicides_100k_pop))
+g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
+  labs(title=paste("SUICIDIOS 2008 NIVEL RIQUEZA ", 2) , 
+       subtitle="Tasa de suicidios por generacion") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+## NIVEL DE RIQUEZA 3
+suicides_2008_riqueza <- filter(suicides_2008, nivel_riqueza==3)
+df  <- suicides_2008_riqueza %>% select(generation, suicides_no, population)
+df[2:3] <- lapply(df[2:3], as.numeric)
+report <- df %>%
+  group_by(generation) %>%
+  summarise_all(funs(sum)) %>%
+  mutate(suicides_100k_pop = suicides_no / population * 100000)
+
+report
+
+g <- ggplot(report, aes(generation,suicides_100k_pop))
+g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
+  labs(title=paste("SUICIDIOS 2008 NIVEL RIQUEZA ", 3) , 
+       subtitle="Tasa de suicidios por generacion") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+#¿Cómo ha evolucionado la tasa de suicidios desde el 1985 en España? 
+
+# - Atributos: suicides_no, population, year, country=Spain,  
+# -	Columna que sume el número por cada año (actualmente por cada anio existen 12 registros, 2 sex x 6 age).
+#-	Columna que sume la población por cada año.
+#-	Calcular la tasa de suicidios por cada año.
+#-	Graficar para identificar de picos o valores altos.
+
+suicides_spain <- filter(d_suicides, country=='Spain')
+df  <- suicides_spain %>% select(year, suicides_no, population)
+df[2:3] <- lapply(df[2:3], as.numeric)
+report <- df %>%
+  group_by(year) %>%
+  summarise_all(funs(sum)) %>%
+  mutate(suicides_100k_pop = suicides_no / population * 100000)
+report
+print(report)
+g <- ggplot(report, aes(year,suicides_100k_pop))
+g + geom_line(stat="identity", color="tomato2") + 
+  labs(title="SUICIDIOS ESPAÑA", 
+       subtitle="Tasa de suicidios por ano en espana") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
